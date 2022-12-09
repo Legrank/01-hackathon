@@ -26,6 +26,7 @@ body {
 
 .menu.open {
     display: block;
+    position: absolute;
 }
 
 .menu .menu-item {
