@@ -1,46 +1,50 @@
 import {Menu} from './core/menu'
-import { createMenuElement } from './utils'
 import { ClicksModule } from './modules/clicks.module'
 
 export class ContextMenu extends Menu {
-  #contextMenu
-  #clicksModule
+  #modules
 
   constructor() {
     super('#menu')
-    this.#clicksModule = new ClicksModule()
+    this.#modules = [
+      new ClicksModule(),
+
+    ]
+    this.add()
   }
 
   open() {
-    this.#contextMenu.classList.add('open')
+    this.el.classList.add('open')
   }
 
   close() {
-    this.#contextMenu.classList.remove('open')
+    this.el.classList.remove('open')
   }
 
-  add(module) {
-    const menuElementHTML = createMenuElement(module.text)
-    menuElementHTML.addEventListener('click', () => {
-      module.trigger()
-      this.close()
+  add() {
+    this.#modules.forEach(module => {
+      const menuElement = module.toHTML()
+      this.el.innerHTML += menuElement
+      const menuElementHTML = this.el.querySelector(`[data-type="${module.type}"]`)
+      menuElementHTML.addEventListener('click', () => {
+        module.trigger()
+        this.close()
+      })
     })
-
-    this.#contextMenu.append(menuElementHTML)
   }
-
-  run() {
-    this.#contextMenu = document.getElementById('menu')
-    this.add(this.#clicksModule)
-
+  
+  #addListener() {
     document.body.addEventListener('contextmenu', e => {
       e.preventDefault()
-      if(this.#contextMenu.querySelector('.menu-item')) {
-        this.#contextMenu.style.left = `${e.clientX}px`
-        this.#contextMenu.style.top = `${e.clientY}px`
+      if(this.el.querySelector('.menu-item')) {
+        this.el.style.left = `${e.clientX}px`
+        this.el.style.top = `${e.clientY}px`
         this.open()
       }
     })
-    
+  }
+
+  run() {
+    this.#addListener()
   }
 }
