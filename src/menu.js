@@ -11,6 +11,7 @@ export class ContextMenu extends Menu {
 
     ]
     this.#modules.forEach(module => this.add(module))
+    this.#modules.forEach(module => this.#addListenerOnElement(module))
   }
 
   open() {
@@ -24,14 +25,18 @@ export class ContextMenu extends Menu {
   add(module) {
     const menuElement = module.toHTML()
     this.el.innerHTML += menuElement
-    const menuElementHTML = this.el.querySelector(`[data-type="${module.type}"]`)
-    menuElementHTML.addEventListener('click', () => {
+  }
+
+  #addListenerOnElement(module) {
+    const element = this.el.querySelector(`[data-type="${module.type}"]`)
+    element.addEventListener('click', () => {
       module.trigger()
       this.close()
     })
+
   }
   
-  #addListener() {
+  #addListenerOnBody() {
     document.body.addEventListener('contextmenu', e => {
       e.preventDefault()
       if(this.el.querySelector('.menu-item')) {
@@ -43,6 +48,6 @@ export class ContextMenu extends Menu {
   }
 
   run() {
-    this.#addListener()
+    this.#addListenerOnBody()
   }
 }
