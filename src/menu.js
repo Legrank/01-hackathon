@@ -1,17 +1,14 @@
-import {Menu} from './core/menu'
-import { ClicksModule } from './modules/clicks.module'
+import { Menu } from './core/menu'
+import { TimerModule } from './modules/timer.module'
 
 export class ContextMenu extends Menu {
   #modules
 
   constructor() {
     super('#menu')
-    this.#modules = [
-      new ClicksModule(),
-
-    ]
-    this.#modules.forEach(module => this.add(module))
-    this.#modules.forEach(module => this.#addListenerOnElement(module))
+    this.#modules = [new TimerModule()]
+    this.#modules.forEach((module) => this.add(module))
+    this.#modules.forEach((module) => this.#addListenerOnElement(module))
   }
 
   open() {
@@ -33,13 +30,12 @@ export class ContextMenu extends Menu {
       module.trigger()
       this.close()
     })
-
   }
-  
+
   #addListenerOnBody() {
-    document.body.addEventListener('contextmenu', e => {
+    document.body.addEventListener('contextmenu', (e) => {
       e.preventDefault()
-      if(this.el.querySelector('.menu-item')) {
+      if (this.el.querySelector('.menu-item')) {
         this.el.style.left = `${e.clientX}px`
         this.el.style.top = `${e.clientY}px`
         this.open()
