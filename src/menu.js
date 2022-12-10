@@ -10,7 +10,7 @@ export class ContextMenu extends Menu {
       new ClicksModule(),
 
     ]
-    this.add()
+    this.#modules.forEach(module => this.add(module))
   }
 
   open() {
@@ -21,15 +21,13 @@ export class ContextMenu extends Menu {
     this.el.classList.remove('open')
   }
 
-  add() {
-    this.#modules.forEach(module => {
-      const menuElement = module.toHTML()
-      this.el.innerHTML += menuElement
-      const menuElementHTML = this.el.querySelector(`[data-type="${module.type}"]`)
-      menuElementHTML.addEventListener('click', () => {
-        module.trigger()
-        this.close()
-      })
+  add(module) {
+    const menuElement = module.toHTML()
+    this.el.innerHTML += menuElement
+    const menuElementHTML = this.el.querySelector(`[data-type="${module.type}"]`)
+    menuElementHTML.addEventListener('click', () => {
+      module.trigger()
+      this.close()
     })
   }
   
