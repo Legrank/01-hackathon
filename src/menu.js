@@ -1,11 +1,14 @@
 import {Menu} from './core/menu'
 import { createMenuElement } from './utils'
+import { ClicksModule } from './modules/clicks.module'
 
 export class ContextMenu extends Menu {
   #contextMenu
+  #clicksModule
 
   constructor() {
     super('#menu')
+    this.#clicksModule = new ClicksModule()
   }
 
   open() {
@@ -28,6 +31,7 @@ export class ContextMenu extends Menu {
 
   run() {
     this.#contextMenu = document.getElementById('menu')
+    this.add(this.#clicksModule)
 
     document.body.addEventListener('contextmenu', e => {
       e.preventDefault()
